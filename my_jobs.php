@@ -14,10 +14,23 @@ if($user_id && $is_company){
 } else {
     $result = null;
 }
+
+$status = isset($_GET['status']) ? $_GET['status'] : '';
 ?>
 
 <section class="card">
   <h1>My Posted Jobs</h1>
+  <?php if($status === 'updated'): ?>
+    <div class="alert success">Job offer updated successfully.</div>
+  <?php elseif($status === 'deleted'): ?>
+    <div class="alert success">Job offer deleted successfully.</div>
+  <?php elseif($status === 'notfound'): ?>
+    <div class="alert">Job not found or not owned by your account.</div>
+  <?php elseif($status === 'forbidden'): ?>
+    <div class="alert">You are not allowed to perform that action.</div>
+  <?php elseif($status === 'error'): ?>
+    <div class="alert">An error occurred while processing your request.</div>
+  <?php endif; ?>
   <?php if(!$user_id): ?>
     <div class="alert">Please <a href="/youth-system/login.php">login</a> to view your posted jobs.</div>
   <?php elseif(!$is_company): ?>
@@ -29,7 +42,14 @@ if($user_id && $is_company){
         <p><strong>Type:</strong> <?php echo htmlspecialchars($row['offer_type']); ?></p>
         <p><?php echo nl2br(htmlspecialchars($row['description'])); ?></p>
         <p><strong>Required skill:</strong> <?php echo htmlspecialchars($row['required_skill']); ?></p>
-        <p style="margin-top:8px;color:var(--muted)">Posted: <?php echo htmlspecialchars($row['created_at']); ?></p>
+        <p class="meta">Posted: <?php echo htmlspecialchars($row['created_at']); ?></p>
+        <div class="action-row">
+          <a class="btn secondary" href="/youth-system/edit_job.php?id=<?php echo (int)$row['id']; ?>">Edit</a>
+          <form method="POST" action="/youth-system/delete_job.php" onsubmit="return confirm('Delete this job offer?');">
+            <input type="hidden" name="job_id" value="<?php echo (int)$row['id']; ?>">
+            <button class="btn" type="submit">Delete</button>
+          </form>
+        </div>
       </article>
     <?php endwhile; ?>
   <?php else: ?>

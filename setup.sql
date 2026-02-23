@@ -5,6 +5,7 @@ USE `youth_skills_system`;
 SET FOREIGN_KEY_CHECKS=0;
 
 DROP TABLE IF EXISTS `job_offers`;
+DROP TABLE IF EXISTS `job_applications`;
 DROP TABLE IF EXISTS `trainings`;
 DROP TABLE IF EXISTS `training_enrollments`;
 DROP TABLE IF EXISTS `certifications`;
@@ -66,6 +67,17 @@ CREATE TABLE IF NOT EXISTS `job_offers` (
   `offer_type` VARCHAR(80),
   `required_skill` VARCHAR(200),
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS `job_applications` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `job_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
+  `status` VARCHAR(30) DEFAULT 'Applied',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY `uniq_job_user` (`job_id`,`user_id`),
+  FOREIGN KEY (job_id) REFERENCES job_offers(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- Sample Users with hashed password (password: 'password')

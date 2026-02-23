@@ -62,6 +62,18 @@ $mysqli->query("CREATE TABLE IF NOT EXISTS training_enrollments (
 )");
 echo "Ensured training_enrollments table exists.<br>";
 
+$mysqli->query("CREATE TABLE IF NOT EXISTS job_applications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    job_id INT NOT NULL,
+    user_id INT NOT NULL,
+    status VARCHAR(30) DEFAULT 'Applied',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uniq_job_user (job_id, user_id),
+    FOREIGN KEY (job_id) REFERENCES job_offers(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+)");
+echo "Ensured job_applications table exists.<br>";
+
 $hash = password_hash('password', PASSWORD_DEFAULT);
 $escaped_hash = $mysqli->real_escape_string($hash);
 $mysqli->query("UPDATE users SET password = '" . $escaped_hash . "' WHERE id = 1");
