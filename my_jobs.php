@@ -1,8 +1,10 @@
 <?php include('includes/header.php');
 
 $user_id = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0;
+$user_role = $_SESSION['user_role'] ?? '';
+$is_company = $user_role === 'company';
 
-if($user_id){
+if($user_id && $is_company){
     $stmt = $conn->prepare("SELECT * FROM job_offers WHERE company_id = ? ORDER BY created_at DESC");
     if($stmt){
         $stmt->bind_param('i', $user_id);
@@ -18,6 +20,8 @@ if($user_id){
   <h1>My Posted Jobs</h1>
   <?php if(!$user_id): ?>
     <div class="alert">Please <a href="/youth-system/login.php">login</a> to view your posted jobs.</div>
+  <?php elseif(!$is_company): ?>
+    <div class="alert">Only employers can access posted jobs management.</div>
   <?php elseif($result && $result->num_rows): ?>
     <?php while($row = $result->fetch_assoc()): ?>
       <article class="card">

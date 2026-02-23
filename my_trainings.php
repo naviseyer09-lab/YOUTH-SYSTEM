@@ -1,10 +1,12 @@
 <?php include('includes/header.php');
 
 $user_id = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0;
+$user_role = $_SESSION['user_role'] ?? '';
+$is_company = $user_role === 'company';
 $result = null;
 $error = null;
 
-if($user_id){
+if($user_id && $is_company){
     // Check if company_id column exists
     $check_col = $conn->query("SHOW COLUMNS FROM trainings LIKE 'company_id'");
     if($check_col && $check_col->num_rows > 0){
@@ -28,6 +30,8 @@ if($user_id){
   <h1>My Posted Trainings</h1>
   <?php if(!$user_id): ?>
     <div class="alert">Please <a href="/youth-system/login.php">log in</a> to view your posted trainings.</div>
+  <?php elseif(!$is_company): ?>
+    <div class="alert">Only employers can access posted trainings management.</div>
   <?php elseif(isset($error)): ?>
     <div class="alert"><?php echo htmlspecialchars($error); ?></div>
   <?php elseif($result && $result->num_rows): ?>

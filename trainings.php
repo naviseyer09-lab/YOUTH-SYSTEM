@@ -15,17 +15,31 @@ if(!$result){
 
 <section class="card">
   <h1>Available Trainings</h1>
+  <p class="subtitle">Explore training programs offered by employers.</p>
+  <?php $is_logged_in = isset($_SESSION['user_id']); ?>
+  <?php $is_youth = (($_SESSION['user_role'] ?? '') === 'youth'); ?>
+
+  <?php if($is_logged_in && $is_youth): ?>
+    <div class="action-row" style="margin-bottom:12px">
+      <a class="btn secondary" href="/youth-system/my_enrollments.php">My Enrolled Trainings</a>
+    </div>
+  <?php endif; ?>
+
   <?php if($result && $result->num_rows): ?>
     <?php while($row = $result->fetch_assoc()): ?>
       <article class="card">
         <h3><?php echo htmlspecialchars($row['title']); ?></h3>
         <p><?php echo nl2br(htmlspecialchars($row['description'])); ?></p>
         <?php if(isset($row['company_name'])): ?>
-        <p style="margin-top:8px;color:var(--muted)">Posted by: <?php echo htmlspecialchars($row['company_name'] ?? 'Company'); ?> — <?php echo htmlspecialchars($row['created_at'] ?? 'N/A'); ?></p>
+        <p class="meta">Posted by: <?php echo htmlspecialchars($row['company_name'] ?? 'Company'); ?> — <?php echo htmlspecialchars($row['created_at'] ?? 'N/A'); ?></p>
         <?php else: ?>
-        <p style="margin-top:8px;color:var(--muted)">Posted: <?php echo htmlspecialchars($row['created_at'] ?? 'N/A'); ?></p>
+        <p class="meta">Posted: <?php echo htmlspecialchars($row['created_at'] ?? 'N/A'); ?></p>
         <?php endif; ?>
-        <p style="margin-top:12px"><a href="register_training.php?id=<?php echo (int)$row['id']; ?>" class="btn">Register Now</a></p>
+        <?php if($is_youth): ?>
+          <div class="action-row">
+            <a href="register_training.php?id=<?php echo (int)$row['id']; ?>" class="btn">Register Now</a>
+          </div>
+        <?php endif; ?>
       </article>
     <?php endwhile; ?>
   <?php else: ?>

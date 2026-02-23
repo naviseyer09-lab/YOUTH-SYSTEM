@@ -51,6 +51,17 @@ if(!in_array('created_at', $col_names)) {
     echo "Added created_at column.<br>";
 }
 
+$mysqli->query("CREATE TABLE IF NOT EXISTS training_enrollments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    training_id INT NOT NULL,
+    user_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uniq_training_user (training_id, user_id),
+    FOREIGN KEY (training_id) REFERENCES trainings(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+)");
+echo "Ensured training_enrollments table exists.<br>";
+
 $hash = password_hash('password', PASSWORD_DEFAULT);
 $escaped_hash = $mysqli->real_escape_string($hash);
 $mysqli->query("UPDATE users SET password = '" . $escaped_hash . "' WHERE id = 1");

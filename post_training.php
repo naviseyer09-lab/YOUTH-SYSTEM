@@ -1,6 +1,8 @@
 <?php include('includes/header.php');
 
 $user_id = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0;
+$user_role = $_SESSION['user_role'] ?? '';
+$is_company = $user_role === 'company';
 // Check if company_id column exists
 $check_col = $conn->query("SHOW COLUMNS FROM trainings LIKE 'company_id'");
 $column_exists = $check_col && $check_col->num_rows > 0;
@@ -11,6 +13,8 @@ if(isset($_POST['post'])){
 
     if(!$user_id){
         $msg = 'You must be logged in to post trainings.';
+    } elseif(!$is_company){
+      $msg = 'Only employers can post trainings.';
     } elseif(empty($title) || empty($description)){
         $msg = 'Please fill in all fields.';
     } elseif(!$column_exists){
@@ -38,6 +42,8 @@ if(isset($_POST['post'])){
   <h1>Post Training</h1>
   <?php if(!$user_id): ?>
     <div class="alert">Please <a href="/youth-system/login.php">log in</a> to post trainings.</div>
+  <?php elseif(!$is_company): ?>
+    <div class="alert">Only employers can post trainings.</div>
   <?php else: ?>
     <?php if(isset($msg)) echo '<div class="alert">'.htmlspecialchars($msg).'</div>'; ?>
     <form method="POST" class="form">

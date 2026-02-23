@@ -6,6 +6,7 @@ SET FOREIGN_KEY_CHECKS=0;
 
 DROP TABLE IF EXISTS `job_offers`;
 DROP TABLE IF EXISTS `trainings`;
+DROP TABLE IF EXISTS `training_enrollments`;
 DROP TABLE IF EXISTS `certifications`;
 DROP TABLE IF EXISTS `skills`;
 DROP TABLE IF EXISTS `users`;
@@ -45,6 +46,16 @@ CREATE TABLE IF NOT EXISTS `trainings` (
   `description` TEXT,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (company_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS `training_enrollments` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `training_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY `uniq_training_user` (`training_id`,`user_id`),
+  FOREIGN KEY (training_id) REFERENCES trainings(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS `job_offers` (

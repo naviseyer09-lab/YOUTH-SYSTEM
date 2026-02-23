@@ -16,7 +16,8 @@ $debug = isset($_GET['debug']) && $_GET['debug'] == '1';
 
 <section class="card">
   <h1>All Job Offers</h1>
-  <div style="margin-bottom:14px;display:flex;gap:8px;flex-wrap:wrap">
+  <p class="subtitle">Browse available opportunities and filter by job type.</p>
+  <div class="filter-row">
     <a class="btn secondary <?php echo !$type_filter ? 'active' : ''; ?>" href="/youth-system/jobs.php">All Types</a>
     <a class="btn secondary <?php echo $type_filter === 'Part-time' ? 'active' : ''; ?>" href="/youth-system/jobs.php?type=Part-time">Part-time</a>
     <a class="btn secondary <?php echo $type_filter === 'Full-time' ? 'active' : ''; ?>" href="/youth-system/jobs.php?type=Full-time">Full-time</a>
@@ -35,7 +36,7 @@ $debug = isset($_GET['debug']) && $_GET['debug'] == '1';
         <p><strong>Type:</strong> <?php echo htmlspecialchars($row['offer_type']); ?></p>
         <p><?php echo nl2br(htmlspecialchars($row['description'])); ?></p>
         <p><strong>Required skill:</strong> <?php echo htmlspecialchars($row['required_skill']); ?></p>
-        <p style="margin-top:8px;color:var(--muted)">Posted by: <?php echo htmlspecialchars($row['company_name'] ?? 'Company'); ?> — <?php echo htmlspecialchars($row['created_at']); ?></p>
+        <p class="meta">Posted by: <?php echo htmlspecialchars($row['company_name'] ?? 'Company'); ?> — <?php echo htmlspecialchars($row['created_at']); ?></p>
       </article>
     <?php endwhile; ?>
   <?php else: ?>

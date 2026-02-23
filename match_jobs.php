@@ -1,9 +1,11 @@
 <?php include('includes/header.php');
 
 $user_id = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0;
+$user_role = $_SESSION['user_role'] ?? '';
+$is_youth = $user_role === 'youth';
 $result = null;
 
-if($user_id){
+if($user_id && $is_youth){
     $stmt = $conn->prepare("SELECT job_offers.* FROM job_offers JOIN skills ON job_offers.required_skill = skills.skill_name WHERE skills.user_id = ? ORDER BY job_offers.created_at DESC");
     if($stmt){
         $stmt->bind_param('i', $user_id);
@@ -18,6 +20,8 @@ if($user_id){
   <h1>Jobs Matched to Your Skills</h1>
   <?php if(empty($user_id)): ?>
     <div class="alert">Please <a href="/youth-system/login.php">log in</a> to view matched jobs.</div>
+  <?php elseif(!$is_youth): ?>
+    <div class="alert">Only employees can access matched jobs.</div>
   <?php elseif($result && $result->num_rows): ?>
     <?php while($row = $result->fetch_assoc()): ?>
       <article class="card">

@@ -6,15 +6,16 @@ if(isset($_POST['login'])){
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    $stmt = $conn->prepare('SELECT id,fullname,password FROM users WHERE email = ? LIMIT 1');
+  $stmt = $conn->prepare('SELECT id,fullname,password,role FROM users WHERE email = ? LIMIT 1');
     if($stmt){
         $stmt->bind_param('s',$email);
         $stmt->execute();
-        $stmt->bind_result($id,$fullname,$hash);
+    $stmt->bind_result($id,$fullname,$hash,$role);
         if($stmt->fetch()){
             if(password_verify($password, $hash)){
                 $_SESSION['user_id'] = $id;
                 $_SESSION['user_name'] = $fullname;
+        $_SESSION['user_role'] = $role;
                 $stmt->close();
                 header('Location: /youth-system/');
                 exit;
@@ -33,6 +34,7 @@ if(isset($_POST['login'])){
 
 <section class="card">
   <h1>Login</h1>
+  <p class="subtitle">Sign in to access your employee or employer dashboard.</p>
   <?php if($message): ?><div class="alert"><?php echo htmlspecialchars($message); ?></div><?php endif; ?>
   <form method="POST" class="form">
     <label>Email
@@ -45,6 +47,9 @@ if(isset($_POST['login'])){
       <button class="btn" name="login">Sign in</button>
     </div>
   </form>
+  <div class="action-row">
+    <a class="btn secondary" href="/youth-system/register.php">Create an account</a>
+  </div>
 </section>
 
 <?php include('includes/footer.php'); ?>
