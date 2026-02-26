@@ -26,27 +26,3 @@ document.addEventListener('DOMContentLoaded', function(){
     }
   });
 });
-// Dashboard sidebar toggle for mobile
-document.addEventListener('DOMContentLoaded', function(){
-  var sidebar = document.querySelector('.sidebar');
-  if(!sidebar) return;
-
-  // Check if we're on mobile
-  var mediaQuery = window.matchMedia('(max-width: 900px)');
-  
-  function handleMediaChange(e) {
-    if(e.matches) {
-      // Mobile view - sidebar should scroll horizontally
-      sidebar.style.maxHeight = '300px';
-    } else {
-      // Desktop view - sidebar fixed height off
-      sidebar.style.maxHeight = 'none';
-    }
-  }
-
-  // Initial check
-  handleMediaChange(mediaQuery);
-  
-  // Listen for changes
-  mediaQuery.addListener(handleMediaChange);
-});
