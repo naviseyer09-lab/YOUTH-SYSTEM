@@ -28,6 +28,9 @@ function nav_active($pages, $current_page){
       <span class="hamburger"></span>
     </button>
     <nav class="nav" id="main-nav">
+      <?php if(isset($_SESSION['user_id'])): ?>
+        <a class="<?php echo nav_active(['dashboard.php'], $current_page); ?>" href="/youth-system/dashboard.php">Dashboard</a>
+      <?php endif; ?>
       <a class="<?php echo nav_active(['jobs.php'], $current_page); ?>" href="/youth-system/jobs.php">All Jobs</a>
       <a class="<?php echo nav_active(['trainings.php'], $current_page); ?>" href="/youth-system/trainings.php">Trainings</a>
       <?php if(isset($_SESSION['user_id'])): ?>
